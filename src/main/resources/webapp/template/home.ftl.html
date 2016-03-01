@@ -58,7 +58,10 @@
 	                	
 		                <#list nodeLst as node>
 		                <li>
-		                	<a href="/home?zkPath=${currentPath}${node}">&nbsp;&nbsp;&nbsp; ${node}</a>
+		                	<a href="/home?zkPath=${currentPath}${node.path}">&nbsp;&nbsp;&nbsp; ${node.description}</a>
+		                	<!-- <#if authRole?? && authRole == 'ADMIN' >
+
+                            </#if> -->
 		                </li>  
 		                </#list>
 	                </ul>

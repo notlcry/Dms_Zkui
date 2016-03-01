@@ -22,6 +22,7 @@ import com.deem.zkui.utils.ServletUtil;
 import com.deem.zkui.utils.ZooKeeperUtil;
 import com.deem.zkui.vo.LeafBean;
 import com.deem.zkui.vo.NodeBean;
+import com.deem.zkui.vo.PathBean;
 import com.deem.zkui.vo.ZKNode;
 import freemarker.template.TemplateException;
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class Home extends HttpServlet {
             String zkPath = request.getParameter("zkPath");
             String navigate = request.getParameter("navigate");
             ZooKeeper zk = ServletUtil.INSTANCE.getZookeeper(request, response, zkServerLst[0], globalProps);
-            List<String> nodeLst;
+            List<PathBean> nodeLst;
             List<LeafBean> leafLst;
             List<NodeBean> datas;
             String currentPath, parentPath, displayPath;
@@ -75,13 +76,13 @@ public class Home extends HttpServlet {
             }
 
             if (zkPath == null || zkPath.equals("/")) {
-                templateParam.put("zkpath", "/");
-                ZKNode zkNode = ZooKeeperUtil.INSTANCE.listNodeEntries(zk, "/", authRole);
+                templateParam.put("zkpath", "/dso");
+                ZKNode zkNode = ZooKeeperUtil.INSTANCE.listNodeEntries(zk, "/dso", authRole);
                 nodeLst = zkNode.getNodeLst();
                 leafLst = zkNode.getLeafBeanLSt();
                 datas = zkNode.getDatas();
-                currentPath = "/";
-                displayPath = "/";
+                currentPath = "/dso/";
+                displayPath = "/dso/";
                 parentPath = "/";
             } else {
                 templateParam.put("zkPath", zkPath);

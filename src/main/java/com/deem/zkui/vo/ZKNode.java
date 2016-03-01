@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ZKNode {
 
-    List<String> nodeLst;
+    List<PathBean> nodeLst;
     List<LeafBean> leafBeanLSt;
     boolean hasValue;
     List<String> key = new ArrayList<String>();
@@ -34,11 +34,11 @@ public class ZKNode {
         leafBeanLSt = new ArrayList<>();
     }
 
-    public List<String> getNodeLst() {
+    public List<PathBean> getNodeLst() {
         return nodeLst;
     }
 
-    public void setNodeLst(List<String> nodeLst) {
+    public void setNodeLst(List<PathBean> nodeLst) {
         this.nodeLst = nodeLst;
     }
 

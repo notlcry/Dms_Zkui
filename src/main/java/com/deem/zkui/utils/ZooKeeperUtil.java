@@ -19,6 +19,7 @@ package com.deem.zkui.utils;
 
 import com.deem.zkui.vo.LeafBean;
 import com.deem.zkui.vo.NodeBean;
+import com.deem.zkui.vo.PathBean;
 import com.deem.zkui.vo.ZKNode;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -255,7 +256,7 @@ public enum ZooKeeperUtil {
     }
 
     public ZKNode listNodeEntries(ZooKeeper zk, String path, String authRole) throws KeeperException, InterruptedException {
-        List<String> folders = new ArrayList<>();
+        List<PathBean> folders = new ArrayList<>();
         List<LeafBean> leaves = new ArrayList<>();
 
         List<String> children = zk.getChildren(path, false);
@@ -271,13 +272,29 @@ public enum ZooKeeperUtil {
 //                        String childPath = getNodePath(path, child);
 //                        leaves.add(this.getNodeValue(zk, path, childPath, child, authRole));
 //                    }
-                    folders.add(child);
+                    if(path.equals("/dso/accounts")){
+                    	String accountName = "";
+                    	try {
+                    		byte[] nodeValue = zk.getData(path + "/" + child, false, new Stat());
+							String value = new String(nodeValue, "utf-8").replace("None", "null");
+							HashMap<String,Object> result =
+							        new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true).
+							        readValue(value, HashMap.class);
+							accountName = (String) result.get("name");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+                    	folders.add(new PathBean(child, accountName));
+                    }else{
+                    	folders.add(new PathBean(child, child));
+                    }
+                    
                 }
 
             }
         }
 
-        Collections.sort(folders);
+//        Collections.sort(folders);
         Collections.sort(leaves, new Comparator<LeafBean>() {
             @Override
             public int compare(LeafBean o1, LeafBean o2) {
@@ -290,6 +307,7 @@ public enum ZooKeeperUtil {
         zkNode.setNodeLst(folders);
         
         byte[] nodeValue = zk.getData(path, false, new Stat());
+        
         if(nodeValue != null && nodeValue.length > 0){
         	try {
 				String value = new String(nodeValue, "utf-8").replace("None", "null");
